@@ -709,8 +709,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   feetPos: {fileID: 645456862}
+  bodyPos: {fileID: 768435738}
   jumpForce: 30
   groundDistance: 0.25
+  crouchDuration: 0.5
 --- !u!114 &2030674793
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CharacterControllerBase : MonoBehaviour
 {
     protected Rigidbody2D Rigidbody;
     protected virtual void Start() {
