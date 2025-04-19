@@ -38,6 +38,8 @@ public class PlayerMovement : CharacterControllerBase
                 StandUp();
             }
         }
+
+        PlayFallingAndLandingAnims();
     }
     
     private void PlayerInputActions()
@@ -66,6 +68,7 @@ public class PlayerMovement : CharacterControllerBase
         if(IsGrounded()) {
             Rigidbody.linearVelocity = Vector2.up * jumpForce;
             StandUp();
+            _anim?.SetTrigger("Jump");
         }
     }
 
@@ -98,5 +101,16 @@ public class PlayerMovement : CharacterControllerBase
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(feetPos.position, groundDistance, groundLayer);
+    }
+
+    private void PlayFallingAndLandingAnims() {
+        if (!IsGrounded() && Rigidbody.linearVelocity.y < 0)
+        {
+            _anim?.SetBool("IsFalling", true);
+        }
+        else
+        {
+            _anim?.SetBool("IsFalling", false);
+        }
     }
 }
