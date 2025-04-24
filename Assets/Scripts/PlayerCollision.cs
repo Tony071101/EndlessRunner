@@ -6,6 +6,7 @@ public class PlayerCollision : CharacterControllerBase
     {
         if(collision.transform.CompareTag("Obstacle")) {
             Destroy(gameObject);
+            GameManager.Instance.GameOver();
         }
     }
 }
