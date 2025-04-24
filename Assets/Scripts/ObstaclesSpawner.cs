@@ -8,7 +8,9 @@ public class ObstaclesSpawner : MonoBehaviour
     [SerializeField] private float obstacleSpawnTime;
     private float timeUntilObstaclesSpawn;
     private void Update() {
-        SpawnLoop();    
+        if(GameManager.Instance.isPlaying) {
+            SpawnLoop();    
+        }
     }
 
     private void SpawnLoop()
