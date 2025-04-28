@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public UnityEvent onPlay = new UnityEvent();
+    public UnityEvent onGameOver = new UnityEvent();
     public float currentScore = 0f;
     public bool isPlaying = false;
     private void Awake() {
@@ -16,8 +20,14 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameOver() {
+        onGameOver?.Invoke();
         currentScore = 0f;
         isPlaying = false;
+    }
+
+    public void StartGame() {
+        onPlay?.Invoke();
+        isPlaying = true;
     }
 
     public string Score() {

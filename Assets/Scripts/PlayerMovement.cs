@@ -91,12 +91,12 @@ public class PlayerMovement : CharacterControllerBase
         isCrouching = false;
     }
 
-    private void OnDisable()
-    {
-        jumpAction.performed -= OnJumpPerformed;
-        crouchAction.performed -= OnCrouchPerformed;
-        playerController.Player.Disable();
-    }
+    // private void OnDisable()
+    // {
+    //     jumpAction.performed -= OnJumpPerformed;
+    //     crouchAction.performed -= OnCrouchPerformed;
+    //     playerController.Player.Disable();
+    // }
 
     private bool IsGrounded()
     {
