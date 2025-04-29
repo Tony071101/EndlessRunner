@@ -5,6 +5,8 @@ using System;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreUI;
+    [SerializeField] private TextMeshProUGUI gameOverScoreUI;
+    [SerializeField] private TextMeshProUGUI gameOverHighscoreUI;
     [SerializeField] private GameObject startMenuUI;
     [SerializeField] private GameObject gameOverUI;
     private GameManager gameManager;
@@ -20,9 +22,12 @@ public class UIManager : MonoBehaviour
 
     public void ActivateGameOverUI() {
         gameOverUI.SetActive(true);
+
+        gameOverScoreUI.text = "Score: " + gameManager.ConvertToIntScore();
+        gameOverHighscoreUI.text = "Highscore: " + gameManager.ConvertToIntHighScore();
     }
 
     private void OnGUI() {
-        scoreUI.text = gameManager.Score();
+        scoreUI.text = gameManager.ConvertToIntScore();
     }
 }
