@@ -1,6 +1,9 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class PlayerMovement : CharacterControllerBase
 {
@@ -17,7 +20,12 @@ public class PlayerMovement : CharacterControllerBase
     private float defaultCrouchHeight = 1f;
     private float crouchHeight = 0.5f;
     private float fallSpeed = 20f;
+    private float swipeMinDistance = 50f; //pixels.
+    private Vector2 swipeStartPos;
     private bool isCrouching = false;
+    private bool isRunning;
+    private bool hasSwiped = false;
+
     private void Awake()
     {
         playerController = new PlayerController();
@@ -28,6 +36,9 @@ public class PlayerMovement : CharacterControllerBase
         base.Start();
         playerController.Player.Enable();
         PlayerInputActions();
+        GameManager.Instance.onPlay.AddListener(OnGameStarted);
+        GameManager.Instance.onGameOver.AddListener(OnGameOver);
+        EnhancedTouchSupport.Enable();
     }
 
     protected override void Update()
@@ -39,7 +50,8 @@ public class PlayerMovement : CharacterControllerBase
             }
         }
 
-        PlayFallingAndLandingAnims();
+        PlayerAnims();
+        DetectSwipe();
     }
     
     private void PlayerInputActions()
@@ -61,6 +73,16 @@ public class PlayerMovement : CharacterControllerBase
         Crouch();
     }
 
+    private void OnGameStarted()
+    {
+        isRunning = true;
+    }
+
+    private void OnGameOver()
+    {
+        isRunning = false;
+    }
+
     protected override void Jump()
     {
         if(feetPos == null) return;
@@ -80,6 +102,7 @@ public class PlayerMovement : CharacterControllerBase
         }
 
         bodyPos.localScale = new Vector3(bodyPos.localScale.x, crouchHeight, bodyPos.localScale.z);
+        _anim?.SetTrigger("Crouch");
         crouchTimer = 0f;
         isCrouching = true;
     }
@@ -91,19 +114,56 @@ public class PlayerMovement : CharacterControllerBase
         isCrouching = false;
     }
 
-    // private void OnDisable()
-    // {
-    //     jumpAction.performed -= OnJumpPerformed;
-    //     crouchAction.performed -= OnCrouchPerformed;
-    //     playerController.Player.Disable();
-    // }
 
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(feetPos.position, groundDistance, groundLayer);
     }
 
-    private void PlayFallingAndLandingAnims() {
+    private void DetectSwipe() {
+        if(Touch.activeTouches.Count == 0) return;
+        foreach(var touch in Touch.activeTouches) {
+            switch (touch.phase)
+            {
+                case UnityEngine.InputSystem.TouchPhase.Began:
+                    swipeStartPos = touch.screenPosition;
+                    hasSwiped = false;
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Moved:
+                    if (hasSwiped) return;
+
+                    Vector2 swipeDelta = touch.screenPosition - swipeStartPos;
+
+                    if (swipeDelta.magnitude > swipeMinDistance)
+                    {
+                        float verticalRatio = Mathf.Abs(swipeDelta.y) / swipeDelta.magnitude;
+
+                        if (verticalRatio > 0.7f)
+                        {
+                            if (swipeDelta.y > 0)
+                            {
+                                Jump();
+                                hasSwiped = true;
+                            }
+                            else
+                            {
+                                Crouch();
+                                hasSwiped = true;
+                            }
+                        }
+                    }
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Ended:
+                case UnityEngine.InputSystem.TouchPhase.Canceled:
+                    hasSwiped = false;
+                    break;
+            }
+        }
+    }
+
+    private void PlayerAnims() {
         if (!IsGrounded() && Rigidbody.linearVelocity.y < 0)
         {
             _anim?.SetBool("IsFalling", true);
@@ -111,6 +171,25 @@ public class PlayerMovement : CharacterControllerBase
         else
         {
             _anim?.SetBool("IsFalling", false);
+            _anim?.SetBool("IsRunning", isRunning);
         }
     }
+
+    // private void OnDisable()
+    // {
+    //     jumpAction.performed -= OnJumpPerformed;
+    //     crouchAction.performed -= OnCrouchPerformed;
+    //     playerController.Player.Disable();
+    // }
+
+    // private void OnDestroy()
+    // {
+    //     if (GameManager.Instance != null)
+    //     {
+    //         GameManager.Instance.onPlay.RemoveListener(OnGameStarted);
+    //         GameManager.Instance.onGameOver.RemoveListener(OnGameOver);
+    //     }
+
+    //     EnhancedTouchSupport.Disable(); // Tắt khi không cần
+    // }
 }
