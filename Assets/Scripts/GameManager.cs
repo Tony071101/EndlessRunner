@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent onPlay = new UnityEvent();
     public UnityEvent onGameOver = new UnityEvent();
     public float currentScore = 0f;
+    public int currentRing = 0;
     public bool isPlaying = false;
     private void Awake() {
         if(Instance == null) Instance = this;  
@@ -33,15 +34,25 @@ public class GameManager : MonoBehaviour
         onPlay?.Invoke();
         isPlaying = true;
         currentScore = 0f;
+        currentRing = 0;
     }
 
     public void GameOver() {
-        if(data.highscore < currentScore) {
-            data.highscore = currentScore;
+        bool shouldSave = false;
 
+        if (data.highscore < currentScore) {
+            data.highscore = currentScore;
+            shouldSave = true;
+        }
+
+        data.totalRings += currentRing;
+        shouldSave = true;
+
+        if (shouldSave) {
             string saveString = JsonUtility.ToJson(data);
             SaveSystem.Save("save", saveString);
         }
+
         isPlaying = false;
         onGameOver?.Invoke();
     }
@@ -52,5 +63,13 @@ public class GameManager : MonoBehaviour
 
     public string ConvertToIntHighScore() {
         return Mathf.RoundToInt(data.highscore).ToString();
+    }
+
+    public string GetCurrentRing() {
+        return currentRing.ToString();
+    }
+
+    public string GetTotalRings() {
+        return data.totalRings.ToString();
     }
 }
