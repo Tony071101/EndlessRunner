@@ -9,7 +9,7 @@ public class PlayerMovement : CharacterControllerBase
 {
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform feetPos;
-    [SerializeField] private Transform bodyPos;
+    private Transform bodyPos;
     [SerializeField] private float jumpForce;
     [SerializeField] private float groundDistance;
     [SerializeField] private float crouchDuration;
@@ -39,6 +39,11 @@ public class PlayerMovement : CharacterControllerBase
         GameManager.Instance.onPlay.AddListener(OnGameStarted);
         GameManager.Instance.onGameOver.AddListener(OnGameOver);
         EnhancedTouchSupport.Enable();
+        GameObject bodyObj = GameObject.FindGameObjectWithTag("Body");
+        if (bodyObj != null)
+        {
+            bodyPos = bodyObj.transform;
+        }
     }
 
     protected override void Update()
@@ -57,10 +62,17 @@ public class PlayerMovement : CharacterControllerBase
     private void PlayerInputActions()
     {
         jumpAction = playerController.Player.Jump;
-        jumpAction.performed += OnJumpPerformed;
+        jumpAction.performed += context => {
+            if (GameManager.Instance.isPlaying)
+                OnJumpPerformed(context);
+        };
+
 
         crouchAction = playerController.Player.Crouch;
-        crouchAction.performed += OnCrouchPerformed;
+        crouchAction.performed += context => {
+            if (GameManager.Instance.isPlaying)
+                OnCrouchPerformed(context);
+        };
     }
 
 
@@ -121,7 +133,8 @@ public class PlayerMovement : CharacterControllerBase
     }
 
     private void DetectSwipe() {
-        if(Touch.activeTouches.Count == 0) return;
+        if (!GameManager.Instance.isPlaying) return;
+        if (Touch.activeTouches.Count == 0) return;
         foreach(var touch in Touch.activeTouches) {
             switch (touch.phase)
             {
@@ -164,6 +177,8 @@ public class PlayerMovement : CharacterControllerBase
     }
 
     private void PlayerAnims() {
+        if(_anim == null) return;
+
         if (!IsGrounded() && Rigidbody.linearVelocity.y < 0)
         {
             _anim?.SetBool("IsFalling", true);
@@ -172,6 +187,20 @@ public class PlayerMovement : CharacterControllerBase
         {
             _anim?.SetBool("IsFalling", false);
             _anim?.SetBool("IsRunning", isRunning);
+        }
+    }
+
+    public void RefreshCharacterReferences()
+    {
+        _anim = GetComponentInChildren<Animator>();
+        GameObject bodyObj = GameObject.FindGameObjectWithTag("Body");
+        if (bodyObj != null)
+        {
+            bodyPos = bodyObj.transform;
+        }
+        else
+        {
+            Debug.LogWarning("Could not find Body (tagged) under Player.");
         }
     }
 

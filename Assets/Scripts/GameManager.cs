@@ -1,55 +1,74 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public Data data;
-    public UnityEvent onPlay = new UnityEvent();
-    public UnityEvent onGameOver = new UnityEvent();
-    public float currentScore = 0f;
-    public int currentRing = 0;
-    public bool isPlaying = false;
-    private void Awake() {
-        if(Instance == null) Instance = this;  
+    public Data Data;
+    public UnityEvent onPlay { get; private set; } = new UnityEvent();
+    public UnityEvent onGameOver { get; private set; } = new UnityEvent();
+    public float currentScore { get; private set; } = 0f;
+    public int currentRing { get; set; } = 0;
+    public bool isPlaying { get; private set; } = false;
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
     }
 
-    private void Start() {
+    private void Start()
+    {
         string loadedData = SaveSystem.Load("save");
-        if(loadedData != null) {
-            data = JsonUtility.FromJson<Data>(loadedData);
-        } else {
-            data = new Data();
+        if (loadedData != null)
+        {
+            Data = JsonUtility.FromJson<Data>(loadedData);
         }
+        else
+        {
+            Data = new Data
+            {
+                highscore = 0f,
+                totalRings = 0,
+                characterStates = new List<CharacterSaveData>()
+            };
+        }
+        InitializeCharacterStates(CharacterManager.Instance.GetAllCharacters());
+        CharacterManager.Instance.LoadFromGameData(Data);
     }
 
-    private void Update() {
-        if(isPlaying) {
+    private void Update()
+    {
+        if (isPlaying)
+        {
             currentScore += Time.deltaTime;
         }
     }
 
-    public void StartGame() {
+    public void StartGame()
+    {
         onPlay?.Invoke();
         isPlaying = true;
         currentScore = 0f;
         currentRing = 0;
     }
 
-    public void GameOver() {
+    public void GameOver()
+    {
         bool shouldSave = false;
 
-        if (data.highscore < currentScore) {
-            data.highscore = currentScore;
+        if (Data.highscore < currentScore)
+        {
+            Data.highscore = currentScore;
             shouldSave = true;
         }
 
-        data.totalRings += currentRing;
+        Data.totalRings += currentRing;
         shouldSave = true;
 
-        if (shouldSave) {
-            string saveString = JsonUtility.ToJson(data);
+        if (shouldSave)
+        {
+            string saveString = JsonUtility.ToJson(Data);
             SaveSystem.Save("save", saveString);
         }
 
@@ -57,19 +76,55 @@ public class GameManager : MonoBehaviour
         onGameOver?.Invoke();
     }
 
-    public string ConvertToIntScore() {
+    public string ConvertToIntScore()
+    {
         return Mathf.RoundToInt(currentScore).ToString();
     }
 
-    public string ConvertToIntHighScore() {
-        return Mathf.RoundToInt(data.highscore).ToString();
+    public string ConvertToIntHighScore()
+    {
+        return Mathf.RoundToInt(Data.highscore).ToString();
     }
 
-    public string GetCurrentRing() {
+    public string GetCurrentRing()
+    {
         return currentRing.ToString();
     }
 
-    public string GetTotalRings() {
-        return data.totalRings.ToString();
+    public string GetTotalRings()
+    {
+        return Data.totalRings.ToString();
+    }
+
+    public void InitializeCharacterStates(List<CharacterInfo> allInfos)
+    {
+        if (Data.characterStates == null)
+        {
+            Data.characterStates = new List<CharacterSaveData>();
+        }
+
+        foreach (var info in allInfos)
+        {
+            bool exists = Data.characterStates.Exists(c => c.characterId == info.characterId);
+            if (!exists)
+            {
+                Data.characterStates.Add(new CharacterSaveData
+                {
+                    characterId = info.characterId,
+                    isUnlocked = false,
+                    isEquipped = false
+                });
+            }
+        }
+
+        // Đảm bảo ít nhất 1 nhân vật được equipped
+        if (!Data.characterStates.Exists(c => c.isEquipped))
+        {
+            var firstUnlocked = Data.characterStates.Find(c => c.isUnlocked);
+            if (firstUnlocked != null)
+            {
+                firstUnlocked.isEquipped = true;
+            }
+        }
     }
 }
