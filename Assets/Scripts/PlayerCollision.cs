@@ -19,8 +19,11 @@ public class PlayerCollision : CharacterControllerBase
             gameObject.SetActive(false);
             GameManager.Instance.GameOver();
         }
+    }
 
-        if(collision.transform.CompareTag("CollectiveRing")) {
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("CollectiveRing")) {
             GameManager.Instance.currentRing++;
             Destroy(collision.gameObject);
         }
