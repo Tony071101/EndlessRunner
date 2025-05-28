@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b73406da6f647574996b070938a98392, type: 3}
-  m_Name: Shadow
+  m_Name: Tail
   m_EditorClassIdentifier: 
-  characterId: char_shdw_id
-  displayName: Shadow the Hedgehog
-  avatar: {fileID: 6004160812922889561, guid: 29acc56e8a9e64449b751e9c751105fa, type: 3}
-  price: 500
-  prefab: {fileID: 3157170790647727286, guid: 8992669f1b60a5c49a5776f977d297af, type: 3}
+  characterId: char_tl_id
+  displayName: Tails Prower
+  avatar: {fileID: 554525098796680917, guid: 160da98974a70964582b39f5abf7c926, type: 3}
+  price: 100
+  prefab: {fileID: 5224109039881125508, guid: 12f1e839941c9ab42a9b6db520a53dd5, type: 3}

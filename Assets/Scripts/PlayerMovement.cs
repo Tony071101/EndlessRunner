@@ -7,12 +7,12 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class PlayerMovement : CharacterControllerBase
 {
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Transform feetPos;
+    [HideInInspector] [SerializeField] private LayerMask groundLayer;
+    [HideInInspector] [SerializeField] private Transform feetPos;
     private Transform bodyPos;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float groundDistance;
-    [SerializeField] private float crouchDuration;
+    private float jumpForce = 30f;
+    private float groundDistance = 0.25f;
+    private float crouchDuration = 0.5f;
     private PlayerController playerController;
     private InputAction jumpAction;
     private InputAction crouchAction;

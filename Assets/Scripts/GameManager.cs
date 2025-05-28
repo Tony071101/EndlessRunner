@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public Data Data;
+    public Data Data { get; set; }
     public UnityEvent onPlay { get; private set; } = new UnityEvent();
     public UnityEvent onGameOver { get; private set; } = new UnityEvent();
     public float currentScore { get; private set; } = 0f;

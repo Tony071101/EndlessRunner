@@ -9,7 +9,7 @@ public class CharacterManager : MonoBehaviour
     [Header("All character infos (ScriptableObjects)")]
     public List<CharacterInfo> allCharacters;
 
-    public List<CharacterSaveData> saveDataList;
+    public List<CharacterSaveData> saveDataList { get; private set; }
     private GameManager gameManager;
 
     private void Awake() {

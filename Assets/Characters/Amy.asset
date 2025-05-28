@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b73406da6f647574996b070938a98392, type: 3}
-  m_Name: Shadow
+  m_Name: Amy
   m_EditorClassIdentifier: 
-  characterId: char_shdw_id
-  displayName: Shadow the Hedgehog
-  avatar: {fileID: 6004160812922889561, guid: 29acc56e8a9e64449b751e9c751105fa, type: 3}
-  price: 500
-  prefab: {fileID: 3157170790647727286, guid: 8992669f1b60a5c49a5776f977d297af, type: 3}
+  characterId: char_amrs_id
+  displayName: Amy Rose
+  avatar: {fileID: 382171488866350908, guid: 97b662be6c8004d43802363f2688e153, type: 3}
+  price: 300
+  prefab: {fileID: 1465442585764377139, guid: fa53ee76fc4f9254b8903a503ca158c7, type: 3}
