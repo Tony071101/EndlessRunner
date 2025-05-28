@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Obstacle
+  - CollectiveRing
+  - CollectiveItem
+  - Body
   layers:
   - Default
   - TransparentFX
@@ -13,8 +17,8 @@ TagManager:
   - UI
   - Ground
   - Player
-  - 
-  - 
+  - Obstacle
+  - CollectiveRing
   - 
   - 
   - 

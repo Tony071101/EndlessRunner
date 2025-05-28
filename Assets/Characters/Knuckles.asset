@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b73406da6f647574996b070938a98392, type: 3}
+  m_Name: Knuckles
+  m_EditorClassIdentifier: 
+  characterId: char_knkcls_id
+  displayName: Knunkcles the Echidna
+  avatar: {fileID: 3248902246204459145, guid: 92d4550898587234ab47d43b26f63cec, type: 3}
+  price: 200
+  prefab: {fileID: 6440125963561126701, guid: ebdbd3ddc72fd7643b91a53aba6473f9, type: 3}
