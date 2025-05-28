@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b73406da6f647574996b070938a98392, type: 3}
-  m_Name: Shadow_test_clone_2
+  m_Name: Knuckles
   m_EditorClassIdentifier: 
-  characterId: char_shdw_clone_test_id_2
-  displayName: Shadow Clone 2 Test
-  avatar: {fileID: 0}
+  characterId: char_knkcls_id
+  displayName: Knunkcles the Echidna
+  avatar: {fileID: 3248902246204459145, guid: 92d4550898587234ab47d43b26f63cec, type: 3}
   price: 200
-  prefab: {fileID: 0}
+  prefab: {fileID: 6440125963561126701, guid: ebdbd3ddc72fd7643b91a53aba6473f9, type: 3}
